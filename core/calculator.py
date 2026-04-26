@@ -22,9 +22,15 @@ class ADMCalculator:
         ]
         
         # 2. Workforce Savings (Offshore Arbitrage)
-        onshore_count = self.data['total_fte_count'] * self.data['onshore_fte_percentage']
+        total_fte = self.data.get('total_fte_count', 500)
+        onshore_pct = self.data.get('onshore_fte_percentage', 0.3)
+        onshore_count = total_fte * onshore_pct
+        
         target_offshore_shift = 0.4 # Shift 40% of onshore to offshore
-        annual_savings = onshore_count * target_offshore_shift * (self.data['onshore_rate'] - self.data['offshore_rate']) * self.hours_per_year
+        onshore_rate = self.data.get('onshore_rate', 120.0)
+        offshore_rate = self.data.get('offshore_rate', 45.0)
+        
+        annual_savings = onshore_count * target_offshore_shift * (onshore_rate - offshore_rate) * self.hours_per_year
         results['annual_workforce_savings'] = annual_savings
         results['cumulative_workforce_savings'] = annual_savings * 4.5 # Ramp up over 5 years
         

@@ -3,29 +3,46 @@ import json
 import time
 from typing import Dict, List
 
-# Try to import google-generativeai, but allow for mock usage if not installed
+# Try to import google-genai, but allow for mock usage if not installed
 try:
-    import google.generativeai as genai
-    HAS_GENAI = True
+    from google import genai
+    HAS_GOOGLE = True
 except ImportError:
-    HAS_GENAI = False
+    HAS_GOOGLE = False
+
+try:
+    from azure.ai.inference import ChatCompletionsClient
+    from azure.ai.inference.models import SystemMessage, UserMessage
+    from azure.core.credentials import AzureKeyCredential
+    HAS_GITHUB = True
+except ImportError:
+    HAS_GITHUB = False
 
 class ADMGenerator:
-    def __init__(self, api_key: str = None, mock: bool = False):
+    def __init__(self, api_key: str = None, mock: bool = False, provider: str = "github"):
         self.mock = mock
+        self.provider = os.getenv("AI_PROVIDER", provider).lower()
         
         if not self.mock:
-            if not HAS_GENAI:
-                raise ImportError("CRITICAL: 'google-generativeai' library not found. Run 'pip install google-generativeai' or use --mock.")
-            
-            if not api_key:
-                raise ValueError("CRITICAL: No API Key provided. Set GOOGLE_AI_API_KEY in .env or use --api-key.")
-            
-            try:
-                genai.configure(api_key=api_key)
-                self.model = genai.GenerativeModel('gemini-2.0-flash')
-            except Exception as e:
-                raise RuntimeError(f"CRITICAL: Failed to configure AI model: {e}")
+            if self.provider == "github":
+                if not HAS_GITHUB:
+                    raise ImportError("CRITICAL: 'azure-ai-inference' not found. Run 'pip install azure-ai-inference'.")
+                token = os.getenv("GITHUB_TOKEN")
+                if not token:
+                    raise ValueError("CRITICAL: GITHUB_TOKEN not found in .env")
+                self.client = ChatCompletionsClient(
+                    endpoint="https://models.github.ai/inference",
+                    credential=AzureKeyCredential(token)
+                )
+                self.model_name = os.getenv("GITHUB_MODEL", "gpt-4o")
+            else:
+                if not HAS_GOOGLE:
+                    raise ImportError("CRITICAL: 'google-genai' library not found. Run 'pip install google-genai'.")
+                if not api_key:
+                    api_key = os.getenv("GOOGLE_AI_API_KEY")
+                if not api_key:
+                    raise ValueError("CRITICAL: No Google API Key provided.")
+                self.google_client = genai.Client(api_key=api_key)
 
     def generate_section(self, section_name: str, client_data: Dict, financials: Dict) -> str:
         if self.mock:
@@ -36,10 +53,24 @@ class ADMGenerator:
         max_retries = 3
         for attempt in range(max_retries):
             try:
-                response = self.model.generate_content(prompt)
-                return response.text
+                if self.provider == "github":
+                    response = self.client.complete(
+                        messages=[
+                            SystemMessage(content="You are an expert ADM Transformation Architect."),
+                            UserMessage(content=prompt),
+                        ],
+                        model=self.model_name,
+                        temperature=0.7,
+                    )
+                    return response.choices[0].message.content
+                else:
+                    response = self.google_client.models.generate_content(
+                        model='gemini-1.5-flash',
+                        contents=prompt
+                    )
+                    return response.text
             except Exception as e:
-                print(f"Error generating {section_name} (Attempt {attempt+1}): {e}")
+                print(f"Error generating {section_name} via {self.provider} (Attempt {attempt+1}): {e}")
                 time.sleep(2 ** attempt)
         return f"ERROR: Failed to generate {section_name}"
 
@@ -74,7 +105,7 @@ class ADMGenerator:
         """
         return prompt
 
-    def generate_all(self, client_data: Dict, financials: Dict) -> Dict[str, str]:
+    def generate_all(self, client_data: Dict, financials: Dict, progress_callback=None) -> Dict[str, str]:
         sections = [
             "Executive Summary", "Portfolio Analysis", "App Inventory", 
             "Benchmarking", "AI Transformation", "Modernization Factory", 
@@ -82,9 +113,16 @@ class ADMGenerator:
             "Delivery Center Architecture", "Benchmarking Summary", "Partnership Overview"
         ]
         results = {}
-        for section in sections:
-            print(f"Generating section: {section}...")
+        for i, section in enumerate(sections):
+            print(f"Generating section: {section} ({i+1}/{len(sections)})...")
             results[section] = self.generate_section(section, client_data, financials)
+            
+            if progress_callback:
+                progress_callback(i + 1, len(sections), section)
+
+            # Add a small delay between sections to avoid hitting Rate Limits (429)
+            if i < len(sections) - 1:
+                time.sleep(5) 
         return results
 
 if __name__ == "__main__":

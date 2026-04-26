@@ -1,3 +1,9 @@
+fastapi
+uvicorn
 jinja2
-google-generativeai
+google-genai
+azure-ai-inference
+azure-core
 python-dotenv
+pydantic
+axios
