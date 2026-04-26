@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ client_data.company_name }} Transformation Plan</title>
+    <style>
+        /* Base styles from benchmark */
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        :root { 
+            --brand-primary: #00bceb; 
+            --brand-dark: #111827; 
+            --brand-accent: #6cc04a;
+            --spacing: 0.25rem;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; margin: 0; }
+        
+        /* Layout */
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 320px; background: #0f172a; color: white; position: sticky; top: 0; h-screen; overflow-y: auto; flex-shrink: 0; border-right: 1px solid #1e293b; }
+        .content { flex: 1; overflow-y: auto; padding: 4rem; max-width: 1200px; margin: 0 auto; }
+        
+        /* Components */
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem; }
+        .kpi-card { background: white; padding: 2.5rem; border-radius: 2.5rem; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .kpi-value { font-size: 3rem; font-weight: 900; margin: 0.5rem 0; color: #0f172a; }
+        .kpi-label { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; color: #64748b; }
+        
+        .section-card { background: white; padding: 3rem; border-radius: 3rem; border: 1px solid #e2e8f0; margin-bottom: 4rem; }
+        .section-title { font-size: 2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 2rem; display: flex; items-center: center; gap: 1rem; }
+        .section-title span { width: 0.5rem; height: 2.5rem; background: var(--brand-primary); border-radius: 999px; }
+        
+        .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 2rem; color: #94a3b8; font-size: 0.875rem; font-weight: 500; text-decoration: none; border-left: 4px solid transparent; transition: all 0.2s; }
+        .nav-item:hover { background: #1e293b; color: white; }
+        .nav-item.active { background: var(--brand-primary); color: white; border-left-color: #60a5fa; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+        th { background: #f8fafc; padding: 1.5rem; text-align: left; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; color: #94a3b8; border-bottom: 1px solid #f1f5f9; }
+        td { padding: 1.5rem; border-bottom: 1px solid #f1f5f9; font-size: 0.875rem; }
+        
+        .badge { padding: 0.25rem 1rem; border-radius: 999px; font-size: 0.75rem; font-weight: 800; }
+        .badge-refactor { background: #fee2e2; color: #dc2626; }
+        .badge-modernize { background: #dcfce7; color: #16a34a; }
+        .badge-retain { background: #dbeafe; color: #2563eb; }
+
+        /* Smooth transitions */
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <div style="padding: 2rem; border-bottom: 1px solid #1e293b; background: #020617;">
+                <h1 style="font-size: 1.5rem; font-weight: 900; letter-spacing: -0.05em;">{{ client_data.company_name }}</h1>
+                <p style="font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5em; color: #64748b; margin-top: 1rem;">Transformation Master Plan</p>
+            </div>
+            <div style="padding: 2rem 0;">
+                {% for section in sections %}
+                <a href="#section-{{ section|lower|replace(' ', '-') }}" class="nav-item">
+                    <span>{{ section }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </nav>
+        
+        <main class="content">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.025em;">Executive Summary</h2>
+                <div style="background: #2563eb; color: white; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.6rem; font-weight: 900; letter-spacing: 0.1em;">CONFIDENTIAL</div>
+            </header>
+
+            <div class="kpi-grid fade-in">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Program Investment</div>
+                    <div class="kpi-value">${{ (financials.total_program_investment / 1000000) | round }}M</div>
+                    <div style="font-size: 0.875rem; color: #94a3b8; font-weight: 700;">5-Year Strategic Partnership</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Cumulative Business Value</div>
+                    <div class="kpi-value">${{ (financials.cumulative_business_value / 1000000000) | round(2) }}B</div>
+                    <div style="font-size: 0.875rem; color: #94a3b8; font-weight: 700;">Total Enterprise Impact</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Target ROI</div>
+                    <div class="kpi-value">{{ financials.target_roi_actual | round }}%</div>
+                    <div style="font-size: 0.875rem; color: #94a3b8; font-weight: 700;">Strategic Outcome</div>
+                </div>
+            </div>
+
+            {% for section_name, content in generated_content.items() %}
+            <div id="section-{{ section_name|lower|replace(' ', '-') }}" class="section-card fade-in">
+                <h3 class="section-title"><span></span>{{ section_name }}</h3>
+                <div style="font-size: 1.125rem; line-height: 1.625; color: #475569; font-weight: 500;">
+                    {{ content | safe }}
+                </div>
+                
+                {% if section_name == "App Inventory" %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Application</th>
+                            <th>Unit</th>
+                            <th>Age</th>
+                            <th>Stack</th>
+                            <th>Disposition</th>
+                            <th style="text-align: right;">Run Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in client_data.applications %}
+                        <tr>
+                            <td style="font-weight: 900;">{{ app.name }}</td>
+                            <td>{{ app.business_unit }}</td>
+                            <td><span class="badge" style="background: #f1f5f9;">{{ app.age_years }}y</span></td>
+                            <td>{{ app.tech_stack }}</td>
+                            <td><span class="badge badge-{{ app.disposition|lower }}">{{ app.disposition }}</span></td>
+                            <td style="text-align: right; font-weight: 900;">${{ (app.annual_run_cost / 1000000) | round(1) }}M</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </main>
+    </div>
+</body>
+</html>

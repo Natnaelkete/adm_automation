@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "company_name": { "type": "string" },
+    "industry": { "type": "string" },
+    "annual_adm_spend": { "type": "number" },
+    "total_fte_count": { "type": "integer" },
+    "onshore_fte_percentage": { "type": "number" },
+    "offshore_fte_percentage": { "type": "number" },
+    "onshore_rate": { "type": "number" },
+    "offshore_rate": { "type": "number" },
+    "applications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "business_unit": { "type": "string" },
+          "age_years": { "type": "number" },
+          "tech_stack": { "type": "string" },
+          "annual_run_cost": { "type": "number" },
+          "disposition": { "type": "string", "enum": ["Retire", "Retain", "Rehost", "Replatform", "Refactor", "Rearchitect"] }
+        },
+        "required": ["name", "business_unit", "age_years", "tech_stack", "annual_run_cost", "disposition"]
+      }
+    },
+    "competitors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "capabilities": { "type": "array", "items": { "type": "string" } },
+          "gaps": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "transformation_targets": {
+      "type": "object",
+      "properties": {
+        "target_roi": { "type": "number" },
+        "modernization_backlog_reduction_percentage": { "type": "number" },
+        "innovation_shift_percentage": { "type": "number" }
+      }
+    }
+  },
+  "required": ["company_name", "industry", "annual_adm_spend", "applications", "competitors"]
+}

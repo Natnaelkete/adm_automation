@@ -1,0 +1,77 @@
+{
+  "company_name": "Global Finance Corp",
+  "industry": "Financial Services",
+  "annual_adm_spend": 180000000,
+  "total_fte_count": 1200,
+  "onshore_fte_percentage": 0.7,
+  "offshore_fte_percentage": 0.3,
+  "onshore_rate": 120,
+  "offshore_rate": 45,
+  "applications": [
+    {
+      "name": "Legacy Core Ledger",
+      "business_unit": "Retail Banking",
+      "age_years": 22,
+      "tech_stack": "Mainframe/DB2",
+      "annual_run_cost": 45000000,
+      "disposition": "Refactor"
+    },
+    {
+      "name": "Global Payments Engine",
+      "business_unit": "Treasury",
+      "age_years": 15,
+      "tech_stack": "Java/Oracle",
+      "annual_run_cost": 32000000,
+      "disposition": "Replatform"
+    },
+    {
+      "name": "Customer Mobile App v2",
+      "business_unit": "Consumer",
+      "age_years": 4,
+      "tech_stack": "React Native/Node.js",
+      "annual_run_cost": 12000000,
+      "disposition": "Retain"
+    },
+    {
+      "name": "Internal Fraud Detection",
+      "business_unit": "Risk",
+      "age_years": 12,
+      "tech_stack": "Python/Legacy ML",
+      "annual_run_cost": 18000000,
+      "disposition": "Modernize"
+    },
+    {
+      "name": "Mortgage Processing Pipeline",
+      "business_unit": "Lending",
+      "age_years": 18,
+      "tech_stack": "Windows Server/.NET",
+      "annual_run_cost": 25000000,
+      "disposition": "Rehost"
+    },
+    {
+      "name": "Legacy Reporting Silo",
+      "business_unit": "Corporate",
+      "age_years": 25,
+      "tech_stack": "VBA/Excel Automation",
+      "annual_run_cost": 8000000,
+      "disposition": "Retire"
+    }
+  ],
+  "competitors": [
+    {
+      "name": "NovaBank",
+      "capabilities": ["Instant account opening", "AI-driven wealth advisor"],
+      "gaps": ["Limited multi-currency support", "No physical branch network"]
+    },
+    {
+      "name": "FinStream",
+      "capabilities": ["Real-time transaction settlement", "Zero-fee crypto bridge"],
+      "gaps": ["High regulatory overhead", "Weak institutional lending"]
+    }
+  ],
+  "transformation_targets": {
+    "target_roi": 220,
+    "modernization_backlog_reduction_percentage": 45,
+    "innovation_shift_percentage": 40
+  }
+}
