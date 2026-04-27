@@ -18,7 +18,12 @@ Every financial figure in the document (ROI, TCV, investment by year) is compute
 - `templates/`:
     - `base.html`: High-end CSS and layout template based on the Cisco benchmark.
 - `outputs/`: Generated HTML documents.
+- `outputs and screenshots/`: Contains a full sample of the generated report (`Global_Finance_Corp_Transformation_Master_Plan.html`) and screenshots demonstrating the UI parity with the Cisco benchmark.
 
+## Output Showcase
+To see a demonstration of the platform's capabilities, navigate to the `outputs and screenshots` directory. You will find:
+1. **Interactive Demo**: Open `Global_Finance_Corp_Transformation_Master_Plan.html` in any modern web browser to experience the Single-Page Application (SPA) layout, custom SVG charts, and full AI-generated narrative.
+2. **Visual Evidence**: View the included `Screenshot*.png` files for a quick glance at the pixel-perfect styling, sidebar navigation, and metric cards.
 ## Setup & Installation
 1. Ensure Python 3.10+ is installed.
 2. Install dependencies:
