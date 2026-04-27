@@ -30,8 +30,11 @@ class ADMGenerator:
                 token = os.getenv("GITHUB_TOKEN")
                 if not token:
                     raise ValueError("CRITICAL: GITHUB_TOKEN not found in .env")
+                # Sanitize token (remove quotes if any)
+                token = token.strip('"').strip("'")
+                
                 self.client = ChatCompletionsClient(
-                    endpoint="https://models.github.ai/inference",
+                    endpoint="https://models.inference.ai.azure.com",
                     credential=AzureKeyCredential(token)
                 )
                 self.model_name = os.getenv("GITHUB_MODEL", "gpt-4o")
@@ -53,6 +56,7 @@ class ADMGenerator:
         max_retries = 3
         for attempt in range(max_retries):
             try:
+                print(f"DEBUG: Calling {self.provider} for {section_name} (Attempt {attempt+1})...")
                 if self.provider == "github":
                     response = self.client.complete(
                         messages=[
@@ -62,15 +66,18 @@ class ADMGenerator:
                         model=self.model_name,
                         temperature=0.7,
                     )
-                    return response.choices[0].message.content
+                    content = response.choices[0].message.content
+                    print(f"DEBUG: Successfully generated {section_name} ({len(content)} chars)")
+                    return content
                 else:
                     response = self.google_client.models.generate_content(
                         model='gemini-1.5-flash',
                         contents=prompt
                     )
+                    print(f"DEBUG: Successfully generated {section_name} via Google")
                     return response.text
             except Exception as e:
-                print(f"Error generating {section_name} via {self.provider} (Attempt {attempt+1}): {e}")
+                print(f"CRITICAL ERROR generating {section_name} via {self.provider}: {str(e)}")
                 time.sleep(2 ** attempt)
         return f"ERROR: Failed to generate {section_name}"
 
