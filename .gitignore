@@ -153,7 +153,7 @@ cython_debug/
 .vscode/
 
 # Project specific
-outputs/
+
 *.html
 !templates/base.html
 !Cisco_ADM.html
