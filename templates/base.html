@@ -3,127 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ client_data.company_name }} Transformation Plan</title>
+    <title>{{ client_data.company_name }} | ADM Transformation Master Plan</title>
     <style>
-        /* Base styles from benchmark */
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        :root { 
-            --brand-primary: #00bceb; 
-            --brand-dark: #111827; 
-            --brand-accent: #6cc04a;
-            --spacing: 0.25rem;
+        
+        :root {
+            --brand-primary: #00bceb;
+            --brand-cyan: #00d2ff;
+            --brand-blue: #0052cc;
+            --sidebar-bg: #0b1120;
+            --content-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
         }
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; margin: 0; }
-        
-        /* Layout */
-        .layout { display: flex; min-height: 100vh; }
-        .sidebar { width: 320px; background: #0f172a; color: white; position: sticky; top: 0; h-screen; overflow-y: auto; flex-shrink: 0; border-right: 1px solid #1e293b; }
-        .content { flex: 1; overflow-y: auto; padding: 4rem; max-width: 1200px; margin: 0 auto; }
-        
-        /* Components */
-        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem; }
-        .kpi-card { background: white; padding: 2.5rem; border-radius: 2.5rem; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .kpi-value { font-size: 3rem; font-weight: 900; margin: 0.5rem 0; color: #0f172a; }
-        .kpi-label { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; color: #64748b; }
-        
-        .section-card { background: white; padding: 3rem; border-radius: 3rem; border: 1px solid #e2e8f0; margin-bottom: 4rem; }
-        .section-title { font-size: 2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 2rem; display: flex; items-center: center; gap: 1rem; }
-        .section-title span { width: 0.5rem; height: 2.5rem; background: var(--brand-primary); border-radius: 999px; }
-        
-        .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 2rem; color: #94a3b8; font-size: 0.875rem; font-weight: 500; text-decoration: none; border-left: 4px solid transparent; transition: all 0.2s; }
-        .nav-item:hover { background: #1e293b; color: white; }
-        .nav-item.active { background: var(--brand-primary); color: white; border-left-color: #60a5fa; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
-        th { background: #f8fafc; padding: 1.5rem; text-align: left; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; color: #94a3b8; border-bottom: 1px solid #f1f5f9; }
-        td { padding: 1.5rem; border-bottom: 1px solid #f1f5f9; font-size: 0.875rem; }
-        
-        .badge { padding: 0.25rem 1rem; border-radius: 999px; font-size: 0.75rem; font-weight: 800; }
-        .badge-refactor { background: #fee2e2; color: #dc2626; }
-        .badge-modernize { background: #dcfce7; color: #16a34a; }
-        .badge-retain { background: #dbeafe; color: #2563eb; }
 
-        /* Smooth transitions */
-        .fade-in { animation: fadeIn 0.5s ease-out; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--content-bg); color: var(--text-dark); overflow: hidden; }
+
+        .layout { display: flex; height: 100vh; }
+
+        /* Sidebar Styling */
+        .sidebar { 
+            width: 300px; 
+            background: var(--sidebar-bg); 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header { padding: 2.5rem 2rem; }
+        .sidebar-logo-box { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+        .sidebar-logo-icon { 
+            width: 40px; height: 40px; background: var(--brand-primary); border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sidebar-company-title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.05em; }
+        .sidebar-sub { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.4em; color: rgba(255,255,255,0.4); font-weight: 800; }
+
+        .nav-group-label { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.3); padding: 2.5rem 2rem 1rem; }
+        .nav-item { 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem; color: rgba(255,255,255,0.6); text-decoration: none; 
+            font-size: 0.85rem; font-weight: 600; transition: all 0.2s; border-left: 4px solid transparent;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item.active { 
+            background: var(--brand-primary); color: white; 
+            border-left-color: #60a5fa; box-shadow: 0 4px 15px rgba(0, 188, 235, 0.3);
+        }
+        .nav-content { display: flex; align-items: center; gap: 1rem; }
+        .nav-arrow { opacity: 0; transition: opacity 0.2s; }
+        .active .nav-arrow { opacity: 1; }
+
+        /* Main Content Header */
+        .main-container { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .top-header { 
+            background: white; border-bottom: 1px solid var(--border-color); 
+            padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-left { display: flex; align-items: center; gap: 1.5rem; }
+        .header-accent { width: 6px; height: 32px; background: var(--brand-primary); border-radius: 99px; }
+        .header-title { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; color: #1e293b; }
+        
+        .header-actions { display: flex; gap: 1rem; }
+        .btn-export { 
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); color: white; 
+            padding: 0.75rem 1.5rem; border-radius: 12px; font-size: 0.7rem; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 0.1em; border: none; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.3); display: flex; align-items: center; gap: 0.5rem;
+        }
+        .badge-confidential { 
+            background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 12px;
+            font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
+        }
+
+        /* Section Layouts */
+        .page-section { display: none; padding: 4rem 3rem; max-width: 1300px; margin: 0 auto; width: 100%; }
+        .page-section.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: white; border-radius: 2.5rem; border: 1px solid var(--border-color); padding: 3rem; margin-bottom: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+
+        /* Metric Cards */
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem; }
+        .metric-card { 
+            background: white; border-radius: 3rem; border: 1px solid var(--border-color); 
+            padding: 3rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center;
+        }
+        .metric-icon { 
+            width: 60px; height: 60px; background: #f0f9ff; border-radius: 20px; 
+            display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; color: var(--brand-primary);
+        }
+        .metric-label { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: #94a3b8; margin-bottom: 1rem; }
+        .metric-value { font-size: 4rem; font-weight: 900; letter-spacing: -0.05em; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .metric-sub { font-size: 0.8rem; font-weight: 600; color: #64748b; }
+
+        /* Cisco Typography */
+        .cisco-hero-text { font-size: 3rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 2.5rem; }
+        .cisco-hero-text span { color: var(--brand-primary); font-style: italic; }
+        .cisco-p { font-size: 1.25rem; line-height: 1.7; color: #475569; font-weight: 500; }
+
+        /* Chart Components */
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+        .chart-title { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3rem; color: #1e293b; }
+
+        /* Table Components */
+        .table-title { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 3rem; }
+        .data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .data-table th { 
+            padding: 1.5rem; text-align: left; font-size: 0.65rem; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: 0.2em; color: #cbd5e1; border-bottom: 1px solid #f1f5f9;
+        }
+        .data-table td { padding: 1.5rem; border-bottom: 1px solid #f1f5f9; font-weight: 600; font-size: 0.95rem; }
+        .status-pill { 
+            padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.6rem; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: 0.1em; background: #0f172a; color: white;
+        }
+        .age-pill { 
+            padding: 0.25rem 0.75rem; border-radius: 8px; font-size: 0.75rem; font-weight: 800;
+        }
+        .age-old { background: #fff1f2; color: #e11d48; }
+        .age-new { background: #f0fdf4; color: #16a34a; }
+
+        /* Benchmarking */
+        .intel-card { background: white; border-radius: 3.5rem; border: 1px solid var(--border-color); padding: 5rem; margin-bottom: 4rem; }
+        .intel-label { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4em; color: var(--brand-primary); margin-bottom: 2rem; display: block; }
+        .intel-text { font-size: 2.5rem; font-weight: 800; line-height: 1.2; color: #1e293b; }
+        .intel-text span { position: relative; display: inline-block; }
+        .intel-text span::after { content: ''; position: absolute; bottom: 5px; left: 0; width: 100%; height: 4px; background: var(--brand-primary); opacity: 0.5; }
+
+        /* Donut Chart SVG */
+        .donut-container { display: flex; align-items: center; justify-content: center; position: relative; height: 300px; }
+        .donut-center { position: absolute; text-align: center; }
+        .donut-center-val { font-size: 2.5rem; font-weight: 900; }
+        .donut-center-label { font-size: 0.6rem; font-weight: 900; color: #94a3b8; text-transform: uppercase; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 3rem; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        @media print {
+            .sidebar { display: none; }
+            .page-section { display: block !important; page-break-after: always; }
+            .top-header { display: none; }
+        }
     </style>
 </head>
 <body>
     <div class="layout">
+        <!-- Sidebar -->
         <nav class="sidebar">
-            <div style="padding: 2rem; border-bottom: 1px solid #1e293b; background: #020617;">
-                <h1 style="font-size: 1.5rem; font-weight: 900; letter-spacing: -0.05em;">{{ client_data.company_name }}</h1>
-                <p style="font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5em; color: #64748b; margin-top: 1rem;">Transformation Master Plan</p>
+            <div class="sidebar-header">
+                <div class="sidebar-logo-box">
+                    <div class="sidebar-logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z"/></svg>
+                    </div>
+                    <div class="sidebar-company-title">{{ client_data.company_name }}</div>
+                </div>
+                <div class="sidebar-sub">Transformation Master Plan</div>
             </div>
-            <div style="padding: 2rem 0;">
-                {% for section in sections %}
-                <a href="#section-{{ section|lower|replace(' ', '-') }}" class="nav-item">
-                    <span>{{ section }}</span>
+
+            <div class="nav-group">
+                <div class="nav-group-label">Strategy & Insight</div>
+                <a href="#executive-summary" class="nav-item active" onclick="showPage('executive-summary', this)">
+                    <div class="nav-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 00 2 2h12a2 2 0 00 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span>Executive Summary</span>
+                    </div>
+                    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
-                {% endfor %}
+                <a href="#portfolio-analysis" class="nav-item" onclick="showPage('portfolio-analysis', this)">
+                    <div class="nav-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        <span>Portfolio Analysis</span>
+                    </div>
+                    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <a href="#app-inventory" class="nav-item" onclick="showPage('app-inventory', this)">
+                    <div class="nav-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        <span>App Inventory</span>
+                    </div>
+                    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <a href="#benchmarking" class="nav-item" onclick="showPage('benchmarking', this)">
+                    <div class="nav-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+                        <span>Benchmarking</span>
+                    </div>
+                    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+
+                <div class="nav-group-label">The Solution</div>
+                <a href="#ai-transformation" class="nav-item" onclick="showPage('ai-transformation', this)">
+                    <div class="nav-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <span>AI Transformation</span>
+                    </div>
+                    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <a href="#modernization-factory" class="nav-item" onclick="showPage('modernization-factory', this)">
+                    <div class="nav-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        <span>Modernization Factory</span>
+                    </div>
+                    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <a href="#cloud-strategy" class="nav-item" onclick="showPage('cloud-strategy', this)">
+                    <div class="nav-content">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg>
+                        <span>Cloud & Data Strategy</span>
+                    </div>
+                    <svg class="nav-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
             </div>
         </nav>
-        
-        <main class="content">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem;">
-                <h2 style="font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.025em;">Executive Summary</h2>
-                <div style="background: #2563eb; color: white; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.6rem; font-weight: 900; letter-spacing: 0.1em;">CONFIDENTIAL</div>
+
+        <!-- Main Container -->
+        <main class="main-container">
+            <header class="top-header">
+                <div class="header-left">
+                    <div class="header-accent"></div>
+                    <div id="section-title-header" class="header-title">Executive Summary</div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-export">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                        Export Master Plan
+                    </button>
+                    <div class="badge-confidential">Confidential</div>
+                </div>
             </header>
 
-            <div class="kpi-grid fade-in">
-                <div class="kpi-card">
-                    <div class="kpi-label">Total Program Investment</div>
-                    <div class="kpi-value">${{ (financials.total_program_investment / 1000000) | round }}M</div>
-                    <div style="font-size: 0.875rem; color: #94a3b8; font-weight: 700;">5-Year Strategic Partnership</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Cumulative Business Value</div>
-                    <div class="kpi-value">${{ (financials.cumulative_business_value / 1000000000) | round(2) }}B</div>
-                    <div style="font-size: 0.875rem; color: #94a3b8; font-weight: 700;">Total Enterprise Impact</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Target ROI</div>
-                    <div class="kpi-value">{{ financials.target_roi_actual | round }}%</div>
-                    <div style="font-size: 0.875rem; color: #94a3b8; font-weight: 700;">Strategic Outcome</div>
-                </div>
-            </div>
+            <div class="content-scroll">
+                <!-- Executive Summary Section -->
+                <section id="executive-summary" class="page-section active">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            </div>
+                            <div class="metric-label">Total Program Investment</div>
+                            <div class="metric-value">${{ (financials.total_program_investment / 1000000) | round }}M</div>
+                            <div class="metric-sub">5-Year Transformation Partnership</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            </div>
+                            <div class="metric-label">Cumulative Business Value</div>
+                            <div class="metric-value">${{ (financials.cumulative_business_value / 1000000000) | round(2) }}B</div>
+                            <div class="metric-sub">Total Enterprise Impact</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                            </div>
+                            <div class="metric-label">Target ROI</div>
+                            <div class="metric-value">{{ financials.target_roi_actual | round }}%</div>
+                            <div class="metric-sub">Strategic Outcome</div>
+                        </div>
+                    </div>
 
-            {% for section_name, content in generated_content.items() %}
-            <div id="section-{{ section_name|lower|replace(' ', '-') }}" class="section-card fade-in">
-                <h3 class="section-title"><span></span>{{ section_name }}</h3>
-                <div style="font-size: 1.125rem; line-height: 1.625; color: #475569; font-weight: 500;">
-                    {{ content | safe }}
-                </div>
-                
-                {% if section_name == "App Inventory" %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Application</th>
-                            <th>Unit</th>
-                            <th>Age</th>
-                            <th>Stack</th>
-                            <th>Disposition</th>
-                            <th style="text-align: right;">Run Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for app in client_data.applications %}
-                        <tr>
-                            <td style="font-weight: 900;">{{ app.name }}</td>
-                            <td>{{ app.business_unit }}</td>
-                            <td><span class="badge" style="background: #f1f5f9;">{{ app.age_years }}y</span></td>
-                            <td>{{ app.tech_stack }}</td>
-                            <td><span class="badge badge-{{ app.disposition|lower }}">{{ app.disposition }}</span></td>
-                            <td style="text-align: right; font-weight: 900;">${{ (app.annual_run_cost / 1000000) | round(1) }}M</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                    <div class="card">
+                        <h1 class="cisco-hero-text">"Legacy Technical Debt" To <span>"Innovation Engine"</span></h1>
+                        <div class="cisco-p">
+                            {{ generated_content['Executive Summary'] | safe }}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Portfolio Analysis Section -->
+                <section id="portfolio-analysis" class="page-section">
+                    <div class="charts-row">
+                        <div class="card">
+                            <h3 class="chart-title">Portfolio Distribution ({{ client_data.applications|length }} Total)</h3>
+                            <div class="donut-container">
+                                <svg width="300" height="300" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#e2e8f0" stroke-width="12"/>
+                                    <!-- Simplified SVG Donut segments (Mocked for visual) -->
+                                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#00bceb" stroke-width="12" stroke-dasharray="125.6 125.6" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+                                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#0052cc" stroke-width="12" stroke-dasharray="75.3 175.9" stroke-dashoffset="-125.6" transform="rotate(-90 50 50)"/>
+                                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="#6cc04a" stroke-width="12" stroke-dasharray="50.2 201.0" stroke-dashoffset="-200.9" transform="rotate(-90 50 50)"/>
+                                </svg>
+                                <div class="donut-center">
+                                    <div class="donut-center-val">{{ client_data.applications|length }}</div>
+                                    <div class="donut-center-label">Total Apps</div>
+                                </div>
+                            </div>
+                            <div class="legend">
+                                <div class="legend-item"><div class="legend-dot" style="background: #00bceb;"></div>Networking</div>
+                                <div class="legend-item"><div class="legend-dot" style="background: #0052cc;"></div>Security</div>
+                                <div class="legend-item"><div class="legend-dot" style="background: #6cc04a;"></div>Customer Experience (CX)</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3 class="chart-title">Tech Stack Age & Risk Profile</h3>
+                            <div style="margin-top: 2rem;">
+                                {% set risks = [('Legacy On-Premise', 85, '#e11d48'), ('Client-Server', 60, '#f59e0b'), ('Web Apps', 45, '#3b82f6'), ('Cloud-Native', 20, '#10b981')] %}
+                                {% for label, val, color in risks %}
+                                <div style="margin-bottom: 2rem;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
+                                        <span>{{ label }}</span>
+                                    </div>
+                                    <div style="height: 24px; background: #f1f5f9; border-radius: 6px; overflow: hidden;">
+                                        <div style="height: 100%; width: {{ val }}%; background: var(--brand-primary); border-radius: 6px;"></div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- App Inventory Section -->
+                <section id="app-inventory" class="page-section">
+                    <div class="card" style="padding: 4rem;">
+                        <h2 class="table-title">Strategic Application Deep Dive</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Application</th>
+                                    <th>Unit</th>
+                                    <th>Age</th>
+                                    <th>Stack</th>
+                                    <th>Disposition</th>
+                                    <th style="text-align: right;">Run Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in client_data.applications %}
+                                <tr>
+                                    <td style="color: #1e293b; font-weight: 800;">{{ app.name }}</td>
+                                    <td style="color: #64748b;">{{ app.business_unit }}</td>
+                                    <td><span class="age-pill {{ 'age-old' if app.age_years > 10 else 'age-new' }}">{{ app.age_years }}y</span></td>
+                                    <td style="color: #64748b;">{{ app.tech_stack }}</td>
+                                    <td><span class="status-pill">{{ app.disposition }}</span></td>
+                                    <td style="text-align: right; color: #1e293b; font-weight: 800;">${{ (app.annual_run_cost / 1000000) | round(1) }}M</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Benchmarking Section -->
+                <section id="benchmarking" class="page-section">
+                    <div class="intel-card">
+                        <span class="intel-label">Competitive Intelligence</span>
+                        <div class="intel-text">
+                            {{ generated_content['Benchmarking'] | safe }}
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00bceb" stroke-width="3"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+                            <h3 class="chart-title" style="margin-bottom: 0;">Networking Benchmarks</h3>
+                        </div>
+                        <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="metric-card" style="padding: 2rem;">
+                                <div class="metric-label">Agility</div>
+                                <div class="metric-value" style="font-size: 2.5rem;">4.2/5</div>
+                            </div>
+                            <div class="metric-card" style="padding: 2rem;">
+                                <div class="metric-label">Cost Efficiency</div>
+                                <div class="metric-value" style="font-size: 2.5rem;">Top 10%</div>
+                            </div>
+                            <div class="metric-card" style="padding: 2rem;">
+                                <div class="metric-label">Innovation</div>
+                                <div class="metric-value" style="font-size: 2.5rem;">88%</div>
+                            </div>
+                            <div class="metric-card" style="padding: 2rem;">
+                                <div class="metric-label">Reliability</div>
+                                <div class="metric-value" style="font-size: 2.5rem;">99.9%</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fallback AI Sections -->
+                {% for section_name, content in generated_content.items() %}
+                {% if section_name not in ['Executive Summary', 'Portfolio Analysis', 'App Inventory', 'Benchmarking'] %}
+                <section id="{{ section_name|lower|replace(' ', '-') }}" class="page-section">
+                    <div class="card">
+                        <h2 class="cisco-hero-text" style="font-size: 2rem;">{{ section_name }}</h2>
+                        <div class="cisco-p">
+                            {{ content | safe }}
+                        </div>
+                    </div>
+                </section>
                 {% endif %}
+                {% endfor %}
+
             </div>
-            {% endfor %}
         </main>
     </div>
+
+    <script>
+        function showPage(pageId, el) {
+            // Update Sidebar
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+
+            // Update Header
+            document.getElementById('section-title-header').innerText = el.querySelector('span').innerText;
+
+            // Show Section
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+    </script>
 </body>
 </html>

@@ -98,10 +98,12 @@ class ADMGenerator:
         
         INSTRUCTIONS:
         1. Mirror the structure, depth, and analytical rigor of the Cisco ADM reference.
-        2. Deliver high-impact, strategy-consultant level narrative.
+        2. Deliver high-impact, strategy-consultant level narrative using rich markdown (bolding, lists, etc.).
         3. Do NOT add generic filler. Every sentence must be substantive to {client_data['company_name']}.
         4. Focus on the transformation from 'Legacy Technical Debt' to 'Innovation Engine'.
-        5. Return ONLY the markdown/HTML content for this section. No conversational preamble.
+        5. Return ONLY the markdown text. 
+        6. IMPORTANT: Do NOT wrap the content in markdown code blocks like ```markdown or ```. Just the raw text.
+        7. Use **Bold** text frequently for key strategic insights and numbers.
         """
         return prompt
 
