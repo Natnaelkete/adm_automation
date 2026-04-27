@@ -157,4 +157,4 @@ cython_debug/
 *.html
 !templates/base.html
 !Cisco_ADM.html
-!"outputs and screenshots/*.html"
+!outputs and screenshots/*.html
